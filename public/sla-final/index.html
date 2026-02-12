@@ -1,0 +1,507 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitor SLA</title>
+
+  <link rel="icon" href="/sla-final/img/logo_navegador.png">
+  <link rel="stylesheet" href="/sla-final/css/index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <header>
+      <div class="brand" onclick="retornaMenu()">
+        <img src="/sla-final/img/logo_grande.png" alt="Logo da empresa">
+        <span>Monitor SLA</span>
+      </div>
+
+      <label for="ufSelect" style="display:flex; gap:10px; align-items:center;">
+        <select id="ufSelect">
+          <option value="RJ" selected>RJ</option>
+          <option value="SP">SP</option>
+        </select>
+      </label>
+
+      <nav>
+        <div id="uploader" class="uploader" onclick="document.getElementById('arquivo').click();"></div>
+        <input type="file" id="arquivo" accept=".xlsx" hidden>
+      </nav>
+
+      <button type="button" class="btn-home" onclick="window.location.href='/html/home.html'">
+        <span>Voltar ao Home</span>
+      </button>
+
+      <button id="btnPrintMain" class="btn-print" type="button" onclick="capturarMainSemPendentes()">
+        <span>Capturar painel</span>
+      </button>
+
+      <button id="btnExportXlsx" class="btn-print" type="button" onclick="exportarKpiXlsx()">
+        <span>Exportar XLSX</span>
+      </button>
+    </header>
+
+    <main class="page">
+      <section class="chart-card">
+        <div class="chart-top">
+          <div class="chart-title">
+            <h2>Status do SLA</h2>
+            <p>Resumo geral, drivers ofensores e SLA por data de transferencia</p>
+          </div>
+
+          <div class="chart-kpis" id="chartKpis">
+            <div class="kpi">
+              <span class="label">SLA Geral</span>
+              <span class="value" id="kpiSlaGeral">0,00%</span>
+            </div>
+            <div class="kpi">
+              <span class="label">Total</span>
+              <span class="value" id="kpiTotal">0</span>
+            </div>
+            <div class="kpi">
+              <span class="label">Em Dia</span>
+              <span class="value" id="kpiEmDia">0</span>
+            </div>
+            <div class="kpi">
+              <span class="label">Em Atraso</span>
+              <span class="value" id="kpiEmAtraso">0</span>
+            </div>
+            <div class="kpi">
+              <span class="label">Pendentes</span>
+              <span class="value" id="kpiPendentes">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-body">
+          <canvas id="chart"></canvas>
+          <div id="chartTooltip" class="chart-tooltip"></div>
+        </div>
+      </section>
+
+      <section class="tables-grid">
+        <article class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h3>Drivers ofensores</h3>
+              <p>Ranking de motoristas com mais atrasos</p>
+            </div>
+            <div class="mini-kpi">
+              <span class="label">Atrasos com motorista</span>
+              <span class="value" id="kpiAtrasosMotorista">0</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Motorista</th>
+                  <th>Qtd</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyMotoristas">
+                <tr>
+                  <td colspan="3">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+
+        <article class="table-card" id="cardInsucessos">
+          <div class="table-card-head">
+            <div>
+              <h3>Insucessos por dia</h3>
+              <p>Fluxo em paineis: dia, nomenclatura e drivers</p>
+            </div>
+            <div class="mini-kpi">
+              <span class="label">Total insucessos</span>
+              <span class="value" id="kpiInsucessosCard">0</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dia</th>
+                  <th>Qtd</th>
+                  <th>% total</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyInsucessosDiasCard">
+                <tr>
+                  <td colspan="3">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-card-foot">
+            <button id="btnAbrirPainelInsucessoDia" class="overlay-close" type="button">Explodir por dia</button>
+          </div>
+        </article>
+
+        <article class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h3>SLA Diário</h3>
+              <p>Percentual diario e volumetria por dia de transferencia</p>
+            </div>
+            <div class="mini-kpi">
+              <span class="label">Media SLA dia</span>
+              <span class="value" id="kpiMediaSlaDia">0,00%</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data Transferencia</th>
+                  <th>Total</th>
+                  <th>Em dia</th>
+                  <th>Atraso</th>
+                  <th>Pendente</th>
+                  <th>SLA dia</th>
+                </tr>
+              </thead>
+              <tbody id="tbodySlaDia">
+                <tr>
+                  <td colspan="6">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="table-card" id="cardPendentes">
+          <div class="table-card-head">
+            <div>
+              <h3>Base de pedidos pendentes</h3>
+              <p>Pedidos classificados como pendentes para a UF selecionada</p>
+            </div>
+            <div class="mini-kpi">
+              <span class="label">Total pendentes</span>
+              <span class="value" id="kpiPendentesCard">0</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pedido</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyPendentes">
+                <tr>
+                  <td>Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="table-card" id="cardAtrasados">
+          <div class="table-card-head">
+            <div>
+              <h3>Base de pedidos atrasados</h3>
+              <p>Pedidos classificados como atrasados para a UF selecionada</p>
+            </div>
+            <div class="mini-kpi">
+              <span class="label">Total atrasados</span>
+              <span class="value" id="kpiAtrasadosCard">0</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pedido</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyAtrasados">
+                <tr>
+                  <td>Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div id="painelAtraso" class="overlay hidden">
+    <div class="overlay-backdrop" data-close="true"></div>
+    <div class="overlay-card" role="dialog" aria-modal="true">
+      <div class="overlay-head">
+        <div>
+          <h3>Detalhes do atraso</h3>
+          <p>Drivers ofensores e culpa do CD</p>
+        </div>
+        <button id="btnFecharAtraso" class="overlay-close" type="button">Fechar</button>
+      </div>
+      <div class="overlay-body">
+        <section class="overlay-section">
+          <div class="overlay-section-head">
+            <h4>Drivers ofensores</h4>
+            <span class="tag" id="tagTotalMotoristas">0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Motorista</th>
+                  <th>Qtd</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyMotoristasDetalhe">
+                <tr>
+                  <td colspan="3">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="overlay-section">
+          <div class="overlay-section-head">
+            <h4>Falha do CD</h4>
+            <span class="tag" id="tagTotalCd">0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Motivo</th>
+                  <th>Qtd</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyCulpaCd">
+                <tr>
+                  <td colspan="3">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="overlay-section">
+          <div class="overlay-section-head">
+            <h4>Outros atrasos</h4>
+            <span class="tag" id="tagTotalOutros">0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pedido</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyOutros">
+                <tr>
+                  <td>Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="painelPendentes" class="overlay hidden">
+    <div class="overlay-backdrop" data-close="true"></div>
+    <div class="overlay-card" role="dialog" aria-modal="true">
+      <div class="overlay-head">
+        <div>
+          <h3>Detalhes dos pendentes</h3>
+          <p>Quebra por motivo de pendência</p>
+        </div>
+        <button id="btnFecharPendentes" class="overlay-close" type="button">Fechar</button>
+      </div>
+            <div class="overlay-body">
+        <section class="overlay-section">
+          <div class="overlay-section-head">
+            <h4>Resumo de pendentes</h4>
+            <span class="tag" id="tagTotalPendentesResumo">0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Motivo</th>
+                  <th>Qtd</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyPendentesResumo">
+                <tr>
+                  <td colspan="3">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="painelInsucessoDia" class="overlay overlay-level-1 hidden">
+    <div class="overlay-backdrop" data-close-insucesso-dia="true"></div>
+    <div class="overlay-card overlay-card-compact" role="dialog" aria-modal="true">
+      <div class="overlay-head">
+        <div>
+          <h3>Insucessos - Seleção de dia</h3>
+          <p>Selecione o dia para explodir as nomenclaturas</p>
+        </div>
+        <button id="btnFecharInsucessoDia" class="overlay-close" type="button">Fechar</button>
+      </div>
+      <div class="overlay-body overlay-body-single">
+        <section class="overlay-section">
+          <div class="overlay-section-head">
+            <h4>Dias com insucesso</h4>
+            <span class="tag" id="tagTotalDiasInsucesso">0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dia</th>
+                  <th>Qtd</th>
+                  <th>% total</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyInsucessoDia">
+                <tr>
+                  <td colspan="3">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="painelInsucessoNomenclatura" class="overlay overlay-level-2 hidden">
+    <div class="overlay-backdrop" data-close-insucesso-nomenclatura="true"></div>
+    <div class="overlay-card overlay-card-compact" role="dialog" aria-modal="true">
+      <div class="overlay-head">
+        <div>
+          <h3>Insucessos - Nomenclaturas do dia</h3>
+          <p id="subtituloPainelInsucessoNomenclatura">Dia selecionado: -</p>
+        </div>
+        <button id="btnFecharInsucessoNomenclatura" class="overlay-close" type="button">Fechar</button>
+      </div>
+      <div class="overlay-body overlay-body-single">
+        <section class="overlay-section">
+          <div class="overlay-section-head">
+            <h4>Nomenclaturas</h4>
+            <span class="tag" id="tagTotalNomenclaturasPainel">0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nomenclatura</th>
+                  <th>Qtd</th>
+                  <th>% dia</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyInsucessoNomenclatura">
+                <tr>
+                  <td colspan="3">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="painelInsucessoDriver" class="overlay overlay-level-3 hidden">
+    <div class="overlay-backdrop" data-close-insucesso-driver="true"></div>
+    <div class="overlay-card overlay-card-compact" role="dialog" aria-modal="true">
+      <div class="overlay-head">
+        <div>
+          <h3>Insucessos - Drivers ofensores</h3>
+          <p id="subtituloPainelInsucessoDriver">Dia: - | Nomenclatura: -</p>
+        </div>
+        <button id="btnFecharInsucessoDriver" class="overlay-close" type="button">Fechar</button>
+      </div>
+      <div class="overlay-body overlay-body-single">
+        <section class="overlay-section">
+          <div class="overlay-section-head">
+            <h4>Ranking de drivers</h4>
+            <span class="tag" id="tagTotalDriversPainel">0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Motorista</th>
+                  <th>Qtd</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyInsucessoDriver">
+                <tr>
+                  <td colspan="3">Sem dados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="painelBaseDetalhe" class="overlay-detail hidden">
+    <div class="overlay-detail-backdrop" data-close-detail="true"></div>
+    <div class="overlay-detail-card" role="dialog" aria-modal="true">
+      <div class="overlay-detail-head">
+        <div>
+          <h4 id="baseDetalheTitulo">Base de pedidos</h4>
+          <p id="baseDetalheSubtitulo">Seleção</p>
+        </div>
+        <span class="tag" id="tagTotalBaseDetalhe">0</span>
+        <button id="btnFecharBaseDetalhe" class="overlay-close" type="button">Fechar</button>
+      </div>
+      <div class="overlay-detail-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Origem</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyBaseDetalhe">
+              <tr>
+                <td colspan="2">Clique em um motorista ou motivo para ver os pedidos.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/sla-final/js/scriptUpload.js"></script>
+  <script src="/sla-final/js/dashboardM2.js"></script>
+  <script src="/sla-final/js/capturaMain.js"></script>
+  <script src="/sla-final/js/retornaMenu.js"></script>
+</body>
+</html>
+
+
+
+

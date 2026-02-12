@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Portal Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100 font-sans flex items-center justify-center min-h-screen px-4">
+
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <!-- Logo e Cabeçalho -->
+        <div class="flex flex-col items-center mb-8">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-5LrugpucoTiMTulQI6CVoMgDG9a6yMWCTw&s"
+                alt="Logo" class="h-16 mb-4 rounded-lg shadow-sm">
+            <h2 class="text-2xl font-bold text-gray-800">Bem-vindo</h2>
+            <p class="text-gray-500 text-sm" id="informativo">Introduza as suas credenciais para aceder</p>
+        </div>
+
+        <!-- Formulário de Login -->
+        <div class="space-y-6">
+            <!-- Campo de E-mail -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </span>
+                    <input type="email" id="email"
+                        class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        placeholder="E-mail do utilizador">
+                </div>
+            </div>
+
+            <!-- Campo de Senha -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                    </span>
+                    <input type="password" id="senha"
+                        class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        placeholder="••••••••">
+                </div>
+            </div>
+
+            <!-- Botão de Ação -->
+            <button
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-200"
+                onclick="logar()">
+                <i data-lucide="log-in" class="w-5 h-5"></i> Entrar no Portal
+            </button>
+        </div>
+
+        <!-- Mensagem de Erro -->
+        <div id="errorMsg" class="mt-4 text-center text-red-500 text-sm hidden">
+            Por favor, preencha todos os campos corretamente.
+        </div>
+    </div>
+
+    <script src="js/icons.js"></script>
+    <script src="js/login.js"></script>
+    
+</body>
+
+</html>

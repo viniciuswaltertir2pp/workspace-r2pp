@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolutivo de Rotas - Last Mile</title>
+    <link rel="icon" href="/last-mile/img/logo_navegador.png">
+    <link rel="stylesheet" href="/last-mile/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="brand">
+                <img src="/last-mile/img/logo_grande.png" alt="Logo da empresa">
+                <span>Evolutivo de Rotas - Last Mile</span>
+            </div>
+
+            <button type="button" class="btn-home" onclick="window.location.href='/html/home.html'">
+                <span>Voltar ao Home</span>
+            </button>
+
+            <button @click="printTabela" class="btn-print">
+                <span>Baixar Evolutivo</span>
+            </button>
+
+            <nav>
+                <select name="Regiao" id="regiao" v-model="filtroRegiao">
+                    <option value="">Todas as bases</option>
+                    <option value="Sao Paulo">Base Pari</option>
+                    <option value="Unidade Osasco">Unidade Osasco</option>
+                    <option value="R2PP PAVUNA">Base Pavuna</option>
+                </select>
+
+                <div id="uploader" class="uploader" onclick="document.getElementById('arquivo').click();"></div>
+                <input type="file" id="arquivo" accept=".xlsx" hidden>
+            </nav>
+        </header>
+
+        <div class="tabela-container" id="tabela-rotas">
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>MOTORISTA</th>
+                        <th>%ENTREGA</th>
+                        <th>ROTA</th>
+                        <th>TOTAL PEDIDOS</th>
+                        <th>ENTREGUES</th>
+                        <th>PENDENTES</th>
+                        <th>INSUCESSOS</th>
+                        <th>%ROTA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="rota in rotasFiltradas" :key="rota.rota">
+                        <td>{{ rota.motorista || 'Sem Motorista' }}</td>
+                        <td :class="getPercEntregaClass(rota)">{{ rota.percEntrega }}</td>
+                        <td>{{ rota.rota }}</td>
+                        <td>{{ rota.totalPedidos }}</td>
+                        <td>{{ rota.entregues }}</td>
+                        <td>{{ rota.pendentes }}</td>
+                        <td>{{ rota.insucessos }}</td>
+                        <td :class="getPercRotaClass(rota)">{{ rota.percRota }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/last-mile/js/script.js"></script>
+    <script src="/last-mile/js/processaPlanilha.js"></script>
+</body>
+</html>

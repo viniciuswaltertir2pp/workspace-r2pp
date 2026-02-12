@@ -1,0 +1,397 @@
+/* =======================
+   RESET BÁSICO
+======================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #111827;
+  background: #f4f5f7;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* =======================
+   HEADER / NAVBAR
+======================= */
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+
+  padding: 10px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* LOGO + NOME */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand img {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+.brand span {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111827;
+}
+
+/* A partir daqui, tudo vai pra direita */
+.btn-print {
+  margin-left: auto;          /* empurra botão + nav pra direita */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  padding: 0;                 /* sem padding no botão em si */
+  background: transparent;
+  border: none;
+
+  font-family: "Space Mono", monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #2563eb;
+
+  cursor: pointer;
+}
+
+/* Ícone do botão */
+.btn-print::before {
+  content: "📸";
+  font-size: 1rem;
+  transform: translateY(1px);
+}
+
+/* “pílula” de fundo do texto */
+.btn-print span {
+  padding: 0.45rem 1.3rem;
+  border-radius: 999px;
+  border: 1px solid #2563eb;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.btn-print:hover span,
+.btn-print:focus-visible span {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #1d4ed8;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.28);
+  transform: translateY(-1px);
+}
+
+.btn-print:active span {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.18);
+}
+
+.btn-print:disabled span {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* NAV (select + uploader) encostados no botão */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* =======================
+   SELECT (#regiao)
+======================= */
+#regiao {
+  height: 40px;
+  min-width: 200px;
+
+  padding: 0 38px 0 12px;
+
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #111827;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  cursor: pointer;
+  outline: none;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.08s ease;
+}
+
+/* “setinha” do select */
+#regiao {
+  background-image:
+    linear-gradient(45deg, #6b7280 50%, transparent 50%),
+    linear-gradient(-45deg, #6b7280 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+#regiao:hover {
+  border-color: #2563eb;
+  background-color: #f9fafb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.18);
+}
+
+#regiao:focus-visible {
+  border-color: #2563eb;
+  box-shadow:
+    0 0 0 1px #2563eb,
+    0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+/* =======================
+   UPLOADER (input .xlsx)
+======================= */
+.uploader {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+
+  background: #f9fafb;
+  border: 1px dashed #cbd5e1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.08s ease;
+}
+
+.uploader::before {
+  content: "☁️";
+  font-size: 20px;
+  line-height: 1;
+}
+
+.uploader:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.25);
+  transform: translateY(-1px);
+}
+
+.uploader.is-uploading {
+  pointer-events: none;
+  animation: pulse-upload 1s infinite ease-in-out;
+}
+
+.uploader.is-success {
+  background: #ecfdf3;
+  border-color: #16a34a;
+}
+
+.uploader.is-success::before {
+  content: "✅";
+}
+
+.uploader.is-error {
+  background: #fef2f2;
+  border-color: #ef4444;
+}
+
+.uploader.is-error::before {
+  content: "⚠️";
+}
+
+@keyframes pulse-upload {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.22);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+
+/* =======================
+   TABELA
+======================= */
+.tabela-container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 24px auto 60px auto;
+  padding: 0 16px;
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  color: #111827;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+/* Cabeçalho em laranja */
+.tabela thead {
+  background: linear-gradient(90deg, #f97316, #ea580c); /* laranja R2PP vibes */
+}
+
+/* Células do cabeçalho */
+.tabela th,
+.tabela td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabela thead th {
+  font-weight: 600;
+  color: #ffffff;                 /* texto branco */
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+/* corpo da tabela */
+.tabela tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabela tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.tabela tbody tr:hover {
+  background: #eff6ff;
+}
+
+/* última coluna (%) alinhada à direita */
+.tabela td:last-child,
+.tabela th:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Cores para a coluna %ROTA */
+.perc-rota-baixo {
+  background-color: #fee2e2; /* vermelho claro */
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.perc-rota-medio {
+  background-color: #fef3c7; /* amarelo claro */
+  color: #b45309;
+  font-weight: 600;
+}
+
+.perc-rota-alto {
+  background-color: #dcfce7; /* verde claro */
+  color: #15803d;
+  font-weight: 600;
+}
+
+/* =======================
+   RESPONSIVO
+======================= */
+@media (max-width: 768px) {
+  header {
+    padding: 10px 16px;
+    flex-wrap: wrap;
+  }
+
+  nav {
+    order: 3;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .tabela-container {
+    padding: 0 8px;
+  }
+}
+
+.btn-home {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  padding: 0;
+  background: transparent;
+  border: none;
+
+  font-family: "Space Mono", monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #475569;
+
+  cursor: pointer;
+}
+
+.btn-home span {
+  padding: 0.45rem 1.3rem;
+  border-radius: 999px;
+  border: 1px solid #94a3b8;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.btn-home:hover span,
+.btn-home:focus-visible span {
+  background: #334155;
+  color: #ffffff;
+  border-color: #1e293b;
+  box-shadow: 0 4px 10px rgba(51, 65, 85, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-home:active span {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(51, 65, 85, 0.2);
+}

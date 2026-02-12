@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoramento de Cargas</title>
+  <link rel="icon" href="/monitoramento-cargas/img/logo_navegador.png">
+  <link rel="stylesheet" href="/monitoramento-cargas/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="brand">
+        <img src="/monitoramento-cargas/img/logo_grande.png" alt="Logo da empresa">
+        <span>Monitoramento de Cargas</span>
+      </div>
+
+      <button type="button" class="btn-home" onclick="window.location.href='/html/home.html'">
+        <span>Voltar ao Home</span>
+      </button>
+
+      <button type="button" class="btn-print" @click="printTabela">
+        <span>Baixar Evolutivo</span>
+      </button>
+
+      <button type="button" class="btn-filter" @click="filtrar">
+        <span>Filtrar Base</span>
+      </button>
+
+      <nav>
+        <a
+          class="converter-link"
+          href="https://convertio.co/pt/csv-xlsx/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Conversor CSV x XLSX
+        </a>
+        <div id="uploader" class="uploader" onclick="document.getElementById('arquivo').click();"></div>
+        <input type="file" id="arquivo" accept=".xlsx" hidden>
+      </nav>
+    </header>
+
+    <div class="tabela-container" id="tabela-pendentes">
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th>Rota</th>
+            <th>Motorista</th>
+            <th>Data</th>
+            <th>Base</th>
+            <th>Performance</th>
+            <th>Pendencia</th>
+            <th style="text-align: center;">Pendentes de Baixa</th>
+            <th>Volumetria Insucessos</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="r in base" :key="`${r.rota}-${r.motorista}`">
+            <td>{{ r.rota }}</td>
+            <td>{{ r.motorista }}</td>
+            <td>{{ r.dataAbertura }}</td>
+            <td>{{ r.filial }}</td>
+            <td>{{ r.performance }}</td>
+            <td>{{ r.pendencia }}</td>
+            <td>{{ r.quantiaPendentesFinalizacao }}</td>
+            <td class="ajuste-manual-cell">
+              <input
+                v-model="r.ajusteManual"
+                class="campo-manual"
+                placeholder="Nao aplicavel"
+                @keydown.enter="$event.target.blur()"
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/monitoramento-cargas/js/script.js"></script>
+  <script src="/monitoramento-cargas/js/uploadBase.js"></script>
+</body>
+</html>

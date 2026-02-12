@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitor SLA</title>
+
+  <link rel="icon" href="img/logo_navegador.png">
+  <link rel="stylesheet" href="../css/index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- Navbar -->
+    <header>
+      <div class="brand" onclick="retornaMenu()">
+        <img src="../img/logo_grande.png" alt="Logo da empresa">
+        <span>Monitor SLA</span>
+      </div>
+
+      <label for="ufSelect" style="display:flex; gap:10px; align-items:center;">
+        <select id="ufSelect">
+          <option value="rj" selected>RJ</option>
+          <option value="sp">SP</option>
+          <!-- adicione as UFs que você quiser -->
+        </select>
+      </label>
+
+      <nav>
+        <div id="uploader" class="uploader" onclick="document.getElementById('arquivo').click();"></div>
+        <input type="file" id="arquivo" accept=".xlsx" hidden>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="chart-card">
+        <div class="chart-top">
+          <div class="chart-title">
+            <h2>Status do SLA</h2>
+            <p>Resumo geral (Em Dia, Em Atraso, Pendentes)</p>
+          </div>
+
+          <!-- ✅ FRONT FIXO (labels fixos) / valores injetados via JS -->
+          <div class="chart-kpis" id="chartKpis">
+            <div class="kpi">
+              <span class="label">Percentual SLA</span>
+              <span class="value" id="percentual">0</span>
+            </div>
+
+            <div class="kpi">
+              <span class="label">Total</span>
+              <span class="value" id="kpiTotal">0</span>
+            </div>
+
+            <div class="kpi">
+              <span class="label">Em Dia</span>
+              <span class="value" id="kpiEmDia">0</span>
+            </div>
+
+            <div class="kpi" onclick="atraso()">
+              <span class="label">Em Atraso</span>
+              <span class="value" id="kpiEmAtraso">0</span>
+            </div>
+
+            <div class="kpi" onclick="pendente()">
+              <span class="label">Pendentes</span>
+              <span class="value" id="kpiPendentes">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-body">
+          <canvas id="chart"></canvas>
+          <div id="chartTooltip" class="chart-tooltip"></div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script src="../js/scriptUpload.js"></script>
+  <script src="../js/scriptProcessaGraficoPage1.js"></script>
+  <script src="../js/retornaMenu.js"></script>
+
+</body>
+</html>

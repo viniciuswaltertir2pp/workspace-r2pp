@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor de Sellers</title>
+  <link rel="icon" href="/milk/img/logo_navegador.png">
+  <link rel="stylesheet" href="/monitor-sellers/css/index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="/milk/img/logo_grande.png" alt="Logo da empresa">
+      <span>Monitor de Sellers</span>
+    </div>
+
+    <button type="button" class="btn-home" onclick="window.location.href='/html/home.html'">
+      Voltar ao Home
+    </button>
+
+    <nav>
+      <input id="sellerSearch" class="seller-search" type="text" placeholder="Buscar seller...">
+
+      <select id="statusFilter" class="filter-select" aria-label="Filtrar por status">
+        <option value="all">Todos status</option>
+        <option value="pendente">Pendente</option>
+        <option value="coletado">Coletado</option>
+      </select>
+
+      <select id="driverFilter" class="filter-select" aria-label="Filtrar por motorista">
+        <option value="all">Todos motoristas</option>
+      </select>
+
+      <div id="uploader" class="uploader" title="Selecionar planilha"></div>
+      <input id="fileInput" type="file" accept=".xlsx,.xls" hidden>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="panel">
+      <div class="panel-head">
+        <p id="status" class="status"></p>
+        <div id="sellerCounter" class="seller-counter" aria-live="polite">
+          <span class="counter-item collected">
+            <span class="counter-dot"></span>
+            <span class="counter-label">Coletados</span>
+            <strong id="sellerCollectedCount">0</strong>
+          </span>
+          <span class="counter-item pending">
+            <span class="counter-dot"></span>
+            <span class="counter-label">Pendentes</span>
+            <strong id="sellerPendingCount">0</strong>
+          </span>
+        </div>
+      </div>
+
+      <div id="cards" class="cards"></div>
+    </section>
+  </main>
+
+  <script src="/monitor-sellers/js/app.js"></script>
+</body>
+</html>
