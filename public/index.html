@@ -7,6 +7,7 @@
     <title>Login - Portal Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body class="bg-gray-100 font-sans flex items-center justify-center min-h-screen px-4">
@@ -54,6 +55,15 @@
                 onclick="logar()">
                 <i data-lucide="log-in" class="w-5 h-5"></i> Entrar no Portal
             </button>
+
+            <div class="flex items-center gap-3">
+                <div class="h-px bg-gray-200 w-full"></div>
+                <span class="text-xs uppercase text-gray-400 tracking-wide">ou</span>
+                <div class="h-px bg-gray-200 w-full"></div>
+            </div>
+
+            <div id="google-login-container" class="flex justify-center"></div>
+            <p id="google-login-msg" class="text-center text-xs text-gray-500 hidden"></p>
         </div>
 
         <!-- Mensagem de Erro -->
